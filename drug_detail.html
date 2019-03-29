@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script src="js/jquery.js" type="text/javascript"></script>
+
+<title></title>
+</head>
+
+<body>
+    <div class="page_top">
+		<a href="" class="back"></a>
+		<a href="" class="price">
+			<div class="price_box">
+				<div class="price_triangle"></div>					 
+				在这里查看“价格”
+			</div>
+		</a>drugHeaderHtml
+		<a href="" class="icon"></a>
+	</div>
+	<div class="drug_box">
+		<div class="drug_top" style="border-bottom: medium none;">
+			<div class="drug_tit">
+				开富林-卡托普利注射液（Rx）
+			</div>
+			<div class="drug_com">
+				常州制药有限公司
+			</div>
+			<div class="drug_sign">
+				<span class="sign">Rx</span>
+			</div>
+		</div>
+
+		<div class="nav_box">
+			<div class="nav_block">
+				<a class="icon01" href="">
+					妊娠分级
+				</a>
+				<a class="icon02" href="">
+					哺乳分级
+				</a>
+				<a class="icon03" href="">
+					相互作用
+				</a>
+				<a class="icon04" href="">
+					用药指南
+				</a>
+			</div>
+			<div class="nav_line">
+				<a href="">
+					用药警戒信息
+				</a>
+			</div>
+		</div>
+		<!--
+		<div class="drug_nav">
+			<a href="">
+				<div class="nav_a">
+					<p>妊娠</p>
+					<p>分级说明</p>
+				</div>
+			</a>
+			<a href="">
+				<div class="nav_b">
+					<p>哺乳</p>
+					<p>分级说明</p>
+				</div>
+			</a>
+			<a href="">
+				<div class="nav_c">
+					<p>相互作用</p>
+					<p>分级说明</p>
+				</div>
+			</a>
+		</div>
+		<div class="drug_link">
+			<a href="" class="msg">
+				药物警戒信息
+			</a>
+		</div>
+		<div class="drug_link">
+			<a href="" class="zhinan">
+				用药指南
+			</a>
+		</div>
+		-->
+
+		<div class="drug_classify">
+			<div class="classify_top">
+				<div class="tit">
+					药品分类
+				</div>
+				<div class="open">
+					-关闭
+				</div>
+			</div>
+			<div class="classify_cont height_auto">
+				<a href="" class="blue">治疗肿瘤药物</a> > <a href="" class="blue">小分子靶向治疗药物</a>
+			</div>
+		</div>
+		<div class="drug_msg">
+			<div class="msg_tit">
+				药品名称
+			</div>
+			<div class="msg_block">
+				<div class="msg_txt">
+					商品名:
+				</div>
+				<div class="msg_infor">
+					开富林
+				</div>
+			</div>
+			<div class="msg_block">
+				<div class="msg_txt">
+					通用名:
+				</div>
+				<div class="msg_infor">
+					卡托普利注射液
+				</div>
+			</div>
+			<div class="msg_block">
+				<div class="msg_txt">
+					英文名:
+				</div>
+				<div class="msg_infor">
+					triamterene tablets
+				</div>
+			</div>
+			<div class="msg_block">
+				<div class="msg_txt" style="width: 75px;">
+					汉语拼音:
+				</div>
+				<div class="msg_infor">
+					ka tuo pu li zhu she ye
+				</div>
+			</div>
+		</div>
+		<div class="drug_msg">
+			<div class="msg_tit">
+				成分
+			</div>
+			<div class="msg_block">
+				<div class="msg_txt" style="width: 115px;">
+					本品主要成份为:
+				</div>
+				<div class="msg_infor">
+					卡托普利。
+				</div>
+			</div>
+			<div class="msg_block">
+				<div class="msg_txt" style="width: 90px;">
+					化学名称为:
+				</div>
+				<div class="msg_infor">
+					1-【2s-2-甲基-3硫基-1-氧化丙基-L-脯氨酸】
+				</div>
+			</div>
+			<div class="msg_block">
+				<div class="msg_txt">
+					分子式:
+				</div>
+				<div class="msg_infor">
+					C9H15NO3S
+				</div>
+			</div>
+			<div class="msg_block">
+				<div class="msg_txt">
+					分子量:
+				</div>
+				<div class="msg_infor">
+					217.29
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="menu_fixed_box">
+		<a href="" class="shoucang">
+			收藏
+		</a>
+		<a href="" class="jiucuo">
+			纠错
+		</a>
+		<a href="" class="fenxiang">
+			分享
+		</a>
+		<a href="" class="mulu">
+			目录
+		</a>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			$('.classify_top').click(function () {
+				if($(this).next().hasClass("height_auto")){
+                    $(this).next().removeClass("height_auto");
+                    $(this).find(".open").html("+展开");
+				} else {
+                    $(this).next().addClass("height_auto");
+                    $(this).find(".open").html("-关闭");
+				}
+            });
+        });
+	</script>
+</body>
+</html>

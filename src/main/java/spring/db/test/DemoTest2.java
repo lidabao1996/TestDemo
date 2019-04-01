@@ -10,5 +10,6 @@ public class DemoTest2 {
     public void test() {
         ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         BeanDemo beanDemo = (BeanDemo) context.getBean("beanDemo");
+        System.out.println("beanDemo = " + beanDemo);
     }
 }

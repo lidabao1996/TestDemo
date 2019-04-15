@@ -5,36 +5,32 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 /**
- * 线程同步
+ * 线程同步,优化版
  */
-public class CountDownLatchDemo {
+public class CountDownLatchDemo2 {
     public static void main(String[] args) {
-
-
-
-
+        //线程池
+        Executor executor = Executors.newFixedThreadPool(2);
         try {
             while (true) {
                 //计数器
                 CountDownLatch latch = new CountDownLatch(2);
 
-                new Thread(new Runnable() {
+                executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        //业务代码
-
-                        //执行完业务代码执行latch
+                        //查询orders执行业务代码
+                        //queryOrders();
                         latch.countDown();
                     }
                 });
 
 
-                new Thread(new Runnable() {
+                executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        //业务代码
-
-                        //执行完业务代码执行latch
+                        //执行业务代码
+                        //queryTrackOrders();
                         latch.countDown();
                     }
                 });

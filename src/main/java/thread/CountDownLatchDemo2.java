@@ -35,6 +35,7 @@ public class CountDownLatchDemo2 {
                     }
                 });
 
+                //实现计数器等于0的状态
                 latch.await();
 
 

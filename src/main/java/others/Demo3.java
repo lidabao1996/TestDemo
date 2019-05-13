@@ -1,5 +1,8 @@
 package others;
 
+/**
+ * 链表 的删除和翻转
+ */
 public class Demo3 {
     public static class ListNode {
         public int data;
@@ -30,15 +33,42 @@ public class Demo3 {
         }
     }
 
+
+    static ListNode reverseNodeList(ListNode head) {
+        if (head == null || head.next == null) return head;
+
+        ListNode pre = null;
+        ListNode next;
+        while (head != null) {
+            next = head.next;
+            head.next = pre;
+            pre = head;
+            head = next;
+            System.out.println("pre = " + pre.data);
+        }
+
+
+        return pre;
+    }
+
+
     public static void main(String[] args) {
         ListNode tail = new ListNode(1, null);
         ListNode c = new ListNode(2, tail);
         ListNode b = new ListNode(3, c);
         ListNode head = new ListNode(4, b);
-        deleteNode(head, c);
-        while (head != null) {
+        //deleteNode(head, c);
+       /* while (head != null) {
             System.out.println(head.data);
             head = head.next;
+        }*/
+
+        System.out.println("---------------翻转后------------------");
+        ListNode reverslist = reverseNodeList(head);
+        System.out.println("reverslist = " + reverslist);
+        while (reverslist != null) {
+            System.out.println(reverslist.data);
+            reverslist = reverslist.next;
         }
 
     }

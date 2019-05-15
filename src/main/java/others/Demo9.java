@@ -18,7 +18,7 @@ public class Demo9 {
             return new int[]{};
         }
         Map<Integer, Integer> map1 = new HashMap<Integer, Integer>();
-        for(int i = 0; i < nums1.length; i++) {
+        for (int i = 0; i < nums1.length; i++) {
             Integer value = map1.get(nums1[i]);
             if (value == null) {
                 map1.put(nums1[i], 1);

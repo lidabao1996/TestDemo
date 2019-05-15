@@ -1,5 +1,6 @@
 package others;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class Demo8 {
     public static int[] intersect(int[] nums1, int[] nums2) {
 
 
-        Map<Integer,Integer> vo1 = new LinkedHashMap<>();
+        Map<Integer,Integer> vo1 = new HashMap<>();
         Map<Integer,Integer> vo2 = new LinkedHashMap<>();
 
 

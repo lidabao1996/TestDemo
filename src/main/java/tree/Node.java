@@ -41,4 +41,20 @@ public class Node {
         }
         return null;
     }
+
+    public int deep(int deep){
+        if(this.left == null && this.right == null){
+            return deep;
+        }
+        int leftDeep = 0;
+        int rightDeep = 0;
+        if(this.left != null){
+            leftDeep = this.left.deep(deep+1);
+        }
+
+        if(this.right != null){
+            rightDeep = this.right.deep(deep+1);
+        }
+        return leftDeep > rightDeep ? leftDeep:rightDeep;
+    }
 }

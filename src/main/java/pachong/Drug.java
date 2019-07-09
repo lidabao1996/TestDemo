@@ -1,15 +1,14 @@
 package pachong;
 
-import cn.edu.hfut.dmic.webcollector.crawler.Crawler;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
-import org.jsoup.select.Elements;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,11 +28,12 @@ public class Drug extends BreadthCrawler {
         addSeed("https://www.315jiage.cn/");
 //        addRegex("https://www.315jiage.cn/[a-z-{0,1}A-z]+/([0-9]+.htm){0,1}(defaultp\\d{0,9}.htm){0,1}");
         addRegex("https://www.315jiage.cn/[a-z-{0,1}A-Z]+/$");
+//        addRegex("https://www.315jiage.cn/b-MeiRong/");
 
         setThreads(50);
         getConf().setTopN(100);
-        getConf().setConnectTimeout(10*1000);
-        getConf().setReadTimeout(10*1000);
+        getConf().setConnectTimeout(10 * 1000);
+        getConf().setReadTimeout(10 * 1000);
 
     }
 
@@ -49,8 +49,8 @@ public class Drug extends BreadthCrawler {
 
         System.out.println();
         System.out.println();
-        //System.err.println("URL---------------------------------------------------------:   " + url);
-        System.out.println(count++);
+        System.err.println("URL---------------------------------------------------------:   " + url);
+//        System.out.println(count++);
 
 
         String total = page.selectText(".container table .p_total");
@@ -64,15 +64,23 @@ public class Drug extends BreadthCrawler {
             map.put(url, names);
         }
         for (int i = 1; i <= totalNum; i++) {
-            Crawler crawler = new Crawler();
-            crawler.addSeed(url + "defaultp" + i + ".htm");
-            Elements es = page.select("div.sCard");
-            for (Element l : es) {
-//                System.out.println(l.text() + "   " + l.select("a").attr("href"));
-                names.add(l.text() + "   " + l.select("a").attr("href"));
+            try {
+                Document doc = Jsoup.connect(url + "defaultp" + i + ".htm").get();
+                //String text = doc.select("#content > p").text();
+
+                Elements es = doc.select("div.sCard");
+                for (Element l : es) {
+                    names.add(l.text() + "   " + l.select("a").attr("href"));
+                }
+
+                Thread.sleep(3000);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }
+
+
     }
 
     public static Map<String, ArrayList<String>> map = new HashMap<>();
@@ -91,7 +99,7 @@ public class Drug extends BreadthCrawler {
             ArrayList<String> value = en.getValue();
             System.out.println("name:" + name + " size=" + value.size());
 
-            /*for (String fileText : value) {
+            for (String fileText : value) {
                 System.out.println(fileText);
             }
 
@@ -100,17 +108,19 @@ public class Drug extends BreadthCrawler {
 
             String filename = arr[1];
             filename = filename.substring(0, filename.length() - 1);
-            outputStream = new OutputStreamWriter(new FileOutputStream("E:/drug/" + filename + ".txt"), "UTF-8");
+            outputStream = new OutputStreamWriter(new FileOutputStream("E:/drug" + filename + ".txt"), "UTF-8");
 
             for (String fileText : value) {
-                outputStream.write(fileText+"\n");
+                outputStream.write(fileText + "\n");
             }
 
-            outputStream.flush();
-            outputStream.close();*/
 
-            totalSize+=value.size();
+            totalSize += value.size();
+            outputStream.flush();
+            outputStream.close();
         }
-        System.out.println("totalSize="+totalSize);
+
+
+        System.out.println("totalSize=" + totalSize);
     }
 }

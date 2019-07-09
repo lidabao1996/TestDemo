@@ -8,7 +8,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class PriceDetailJsoup {
     public static void main(String[] args) {
         List<String> urls = UrlUtils.urls();
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("E:/prices/result/prices002.txt"));
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("E:/prices/result/prices001.txt"));
 
             //Htmlunit模拟的浏览器，设置css,js等支持及其它的一些简单设置
             WebClient browser = new WebClient();

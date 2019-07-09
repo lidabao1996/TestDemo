@@ -7,14 +7,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class DrugPaths extends BreadthCrawler {
-    String paths[] ={
-
-
-
-    };
-
-
-    public DrugPaths(String crawlPath, boolean autoParse) {
+       public DrugPaths(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
 
         this.addSeed("https://www.315jiage.cn");

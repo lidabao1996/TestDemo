@@ -1,7 +1,10 @@
 package pachong;
 
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
+import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
+import cn.edu.hfut.dmic.webcollector.net.Proxys;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,19 +19,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class Drug extends BreadthCrawler {
-
-
-    static String reg = "[xiyao,x-GanMao,x-KeChuan]";
-
-
     public Drug(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
-
-
         addSeed("https://www.315jiage.cn/");
 //        addRegex("https://www.315jiage.cn/[a-z-{0,1}A-z]+/([0-9]+.htm){0,1}(defaultp\\d{0,9}.htm){0,1}");
         addRegex("https://www.315jiage.cn/[a-z-{0,1}A-Z]+/$");
-//        addRegex("https://www.315jiage.cn/b-MeiRong/");
 
         setThreads(50);
         getConf().setTopN(100);
@@ -38,6 +33,17 @@ public class Drug extends BreadthCrawler {
     }
 
     int count = 0;
+
+    @Override
+    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
+        HttpRequest request = new HttpRequest(crawlDatum);
+        Proxys proxies = new Proxys();
+        proxies.add("218.193.191.192",8888);
+        request.setProxy(proxies.nextRandom());
+        //InetSocketAddress address = new InetSocketAddress("180.118.86.25", 9000);
+        //request.setProxy(new Proxy(Proxy.Type.HTTP,address));
+        return request.responsePage();
+    }
 
     @Override
     public void visit(Page page, CrawlDatums crawlDatums) {
@@ -108,7 +114,7 @@ public class Drug extends BreadthCrawler {
 
             String filename = arr[1];
             filename = filename.substring(0, filename.length() - 1);
-            outputStream = new OutputStreamWriter(new FileOutputStream("E:/drug" + filename + ".txt"), "UTF-8");
+            outputStream = new OutputStreamWriter(new FileOutputStream("E:/drug2019/" + filename + ".txt"), "UTF-8");
 
             for (String fileText : value) {
                 outputStream.write(fileText + "\n");

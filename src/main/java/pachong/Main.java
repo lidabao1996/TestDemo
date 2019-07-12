@@ -26,7 +26,7 @@ public class Main {
             FileOutputStream fos = new FileOutputStream(result);
             for (int i = 0; i < sub.length; i++) {
                 File f = sub[i];
-                //System.out.println(f.getName());
+                System.out.println(f.getName());
                 BufferedReader br = new BufferedReader(new FileReader(f));
                 while (br.read() != -1) {
                     String line = br.readLine();
@@ -34,9 +34,7 @@ public class Main {
                         continue;
                     }
                     String suffix = line.substring(line.indexOf("../") + 3);
-                    if (suffix.equals("z-XueYeXi/294834.htm")){
-                        System.out.println(f.getName());
-                    }
+
                     String url = "https://www.315jiage.cn/" + suffix + "\r\n";
                     line = line + "\r\n";
                     fos.write(url.getBytes(), 0, url.getBytes().length);

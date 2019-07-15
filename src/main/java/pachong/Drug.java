@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -19,11 +20,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class Drug extends BreadthCrawler {
+    static final String folderName = "E:/drug2019-2/";
     public Drug(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
         addSeed("https://www.315jiage.cn/");
 //        addRegex("https://www.315jiage.cn/[a-z-{0,1}A-z]+/([0-9]+.htm){0,1}(defaultp\\d{0,9}.htm){0,1}");
-        addRegex("https://www.315jiage.cn/[a-z-{0,1}A-Z]+/$");
+        //addRegex("https://www.315jiage.cn/[a-z-{0,1}A-Z]+/$");
+        addRegex("https://www.315jiage.cn/[^/]+/$");
 
         setThreads(50);
         getConf().setTopN(100);
@@ -34,7 +37,7 @@ public class Drug extends BreadthCrawler {
 
     int count = 0;
 
-    @Override
+    /*@Override
     public Page getResponse(CrawlDatum crawlDatum) throws Exception {
         HttpRequest request = new HttpRequest(crawlDatum);
         Proxys proxies = new Proxys();
@@ -43,7 +46,7 @@ public class Drug extends BreadthCrawler {
         //InetSocketAddress address = new InetSocketAddress("180.118.86.25", 9000);
         //request.setProxy(new Proxy(Proxy.Type.HTTP,address));
         return request.responsePage();
-    }
+    }*/
 
     @Override
     public void visit(Page page, CrawlDatums crawlDatums) {
@@ -114,7 +117,9 @@ public class Drug extends BreadthCrawler {
 
             String filename = arr[1];
             filename = filename.substring(0, filename.length() - 1);
-            outputStream = new OutputStreamWriter(new FileOutputStream("E:/drug2019/" + filename + ".txt"), "UTF-8");
+            File folder = new File(folderName);
+            folder.mkdirs();
+            outputStream = new OutputStreamWriter(new FileOutputStream(new File(folder, filename + ".txt")), "UTF-8");
 
             for (String fileText : value) {
                 outputStream.write(fileText + "\n");

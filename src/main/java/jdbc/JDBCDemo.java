@@ -41,11 +41,14 @@ public class JDBCDemo {
             //逢date,java.sql.Date;
         }*/
 
-
-        List<String> list = UrlUtils.urls();
-        String sql = "insert into price_url(url,status) value(?,?)";
         PreparedStatement pstm = null;
-        String text = "";
+
+
+        PriceDataSave.save(pstm,conn);
+
+        /*List<String> list = UrlUtils.urls();
+        String sql = "insert into price_url(url,status) value(?,?)";
+
         for (String urlstr : list) {
             //ResultSet resultSet = pstm.executeQuery("select count(*) from price_url where url = " + urlstr + "");
             //String dataUrl = resultSet.getString("url");
@@ -57,7 +60,7 @@ public class JDBCDemo {
             if (row) {
                 System.out.println("添加成功！");
             }
-        }
+        }*/
 
 
         //释放资源

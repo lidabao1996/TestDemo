@@ -7,11 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UrlUtils {
+    public int id;
+
+    public int getId() {
+        return id;
+    }
+
+
+
     public static List<String> urls() {
         String line;
         List<String> urls = new ArrayList<>();
+
         try {
-            //FileInputStream inputStream = new FileInputStream("E:/url/"+GENERICENAME+"-url.txt");
             FileInputStream inputStream = new FileInputStream("E:/prices/url_result.txt");
 
             InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");

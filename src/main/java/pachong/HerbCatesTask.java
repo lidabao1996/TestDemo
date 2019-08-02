@@ -9,6 +9,8 @@ import org.jsoup.nodes.Document;
 
 import java.io.*;
 import java.sql.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.mysql.jdbc.Connection;
 import org.jsoup.nodes.Element;
@@ -19,6 +21,7 @@ public class HerbCatesTask {
 
     public static void main(String[] args) throws Exception {
         cates();
+        // dingxiangDoctorCates("阿莫西林", setParams());
     }
 
     public static void cates() throws Exception {
@@ -76,13 +79,15 @@ public class HerbCatesTask {
 
     }
 
+    public static Document document = null;
 
     /**
+     * http://drugs.dxy.cn/search/drug.htm?keyword=%E9%98%BF%E8%8E%AB%E8%A5%BF%E6%9E%97
      * 中药材分类
      */
     public static void dingxiangDoctorCates(String url, WebClient webClient) {
         try {
-            pstm = connection.prepareStatement("insert into dingxiangyuan_herb_cate(generic_key,text)value(?,?)");
+            // pstm = connection.prepareStatement("insert into dingxiangyuan_herb_cate(generic_key,text)value(?,?)");
             // 准备链接
             //WebRequest webRequest = new WebRequest(new URL(url));
             // 设置请求方式
@@ -92,10 +97,10 @@ public class HerbCatesTask {
             HtmlPage page = webClient.getPage("http://drugs.dxy.cn/search/drug.htm?keyword=" + url);
             System.out.println("网页加载中....");
 
-            Document document = Jsoup.parse(page.asXml());
+            document = Jsoup.parse(page.asXml());
 
             String text = document.select("#container > div.common_bd.clearfix > div.common_mainwrap.fl > div > div").text();
-            if (null != text) {
+            if (!StringUtils.isEmpty(text)) {
                 pstm.setString(1, url);
                 pstm.setString(2, text);
 
@@ -103,16 +108,30 @@ public class HerbCatesTask {
                 if (row) {
                     System.out.println("添加成功！");
                 }
-            }else {
-                String pageTotal = document.select("#container > div.common_hd.clearfix > div.fr.f12.result-status > span:nth-child(2)").text();
+            } else {
 
+                String pageTotal = document.select("#container > div.pagination > span").attr("title");
 
-                Elements elements = document.select("#container > div.common_bd.clearfix > div > div > div > ul >li");
+                if (null != pageTotal) {
+                    String[] arr = pageTotal.split(", ");
+                    String reg = "[^0-9]";
+                    String num = arr[1];
+                    Pattern p = Pattern.compile(reg);
+                    Matcher m = p.matcher(num);
+                    int total = Integer.parseInt(m.replaceAll("").trim());
+                    if (total > 1) {
+                        for (int i = 1; i <= total; i++) {
+                            HtmlPage fenye = webClient.getPage("http://drugs.dxy.cn/search/drug.htm?page=" + i + "&keyword=" + url);
+                            document = Jsoup.parse(fenye.asXml());
+                            Elements elements = document.select("#container > div.common_bd.clearfix > div > div > div > ul >li");
 
-                for (Element element:elements){
-                    System.out.println(element.text());
+                            for (Element element : elements) {
+                                String attr = element.select("a").attr("href");
+                                saveUrls(url, attr);
+                            }
+                        }
+                    }
                 }
-
             }
 
             // 线程沉睡
@@ -177,6 +196,20 @@ public class HerbCatesTask {
             e.printStackTrace();
         }
 
+    }
+
+
+    public static void saveUrls(String genericKey, String cateUrl) throws Exception {
+        pstm = connection.prepareStatement("insert into herb_cates_urls(generic_key,cate_url)value(?,?)");
+        if (!StringUtils.isEmpty(cateUrl)) {
+            pstm.setString(1, genericKey);
+            pstm.setString(2, cateUrl);
+
+            boolean row = pstm.execute();
+            if (row) {
+                System.out.println("添加成功！");
+            }
+        }
     }
 
 

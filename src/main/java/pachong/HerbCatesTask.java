@@ -1,9 +1,6 @@
 package pachong;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.CookieManager;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.apache.commons.lang.StringUtils;
@@ -14,6 +11,8 @@ import java.io.*;
 import java.sql.*;
 
 import com.mysql.jdbc.Connection;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class HerbCatesTask {
     static Connection connection = null;
@@ -37,9 +36,8 @@ public class HerbCatesTask {
         while (resultSet.next()) {
             //使用resultSet.next()判断是否有下一个值，如果有就返回true
             String genericUrl = resultSet.getString("url");
-//            System.out.println(genericUrl);
-            //dingxiangCate(genericUrl);
-            dingxiangDoctorCates(genericUrl,setParams());
+            //System.out.println(genericUrl);
+            dingxiangDoctorCates(genericUrl, setParams());
         }
         //释放资源
         connection.close();
@@ -52,11 +50,14 @@ public class HerbCatesTask {
 
     public static void dingxiangCate(String url) {
         try {
-            Thread.sleep(4000);
+
             pstm = connection.prepareStatement("insert into dingxiangyuan_herb_cate(generic_key,text)value(?,?)");
             Document doc = Jsoup.connect("http://drugs.dxy.cn/search/drug.htm?keyword=" + url).get();
+            //http://drugs.dxy.cn/search/drug.htm?keyword=开胸理气丸
             doc.baseUri();
             String text = doc.select("#container > div.common_bd.clearfix > div.common_mainwrap.fl > div > div").text();
+            //String text = doc.select("#container > div.common_bd.clearfix").text();
+
             System.out.println(text);
             if (!StringUtils.isEmpty(text)) {
                 pstm.setString(1, url);
@@ -68,6 +69,7 @@ public class HerbCatesTask {
                 }
             }
 
+            Thread.sleep(2000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,11 +92,6 @@ public class HerbCatesTask {
             HtmlPage page = webClient.getPage("http://drugs.dxy.cn/search/drug.htm?keyword=" + url);
             System.out.println("网页加载中....");
 
-
-            HtmlImage img = null;
-            // 判断验证码是否弹出
-
-
             Document document = Jsoup.parse(page.asXml());
 
             String text = document.select("#container > div.common_bd.clearfix > div.common_mainwrap.fl > div > div").text();
@@ -106,6 +103,16 @@ public class HerbCatesTask {
                 if (row) {
                     System.out.println("添加成功！");
                 }
+            }else {
+                String pageTotal = document.select("#container > div.common_hd.clearfix > div.fr.f12.result-status > span:nth-child(2)").text();
+
+
+                Elements elements = document.select("#container > div.common_bd.clearfix > div > div > div > ul >li");
+
+                for (Element element:elements){
+                    System.out.println(element.text());
+                }
+
             }
 
             // 线程沉睡

@@ -33,7 +33,7 @@ public class DingxiangVerificationTask {
             // 设置请求方式
             //webRequest.setHttpMethod(HttpMethod.GET);
             // 发送页面请求
-            Thread.sleep(3000);
+            Thread.sleep(2000);
             HtmlPage page = webClient.getPage(url);
             System.out.println("网页加载中....");
 

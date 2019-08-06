@@ -22,12 +22,11 @@ import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HerbCatesTask {
+public class HerbCatesHttpTask {
     static Connection connection = null;
 
     public static void main(String[] args) throws Exception {
         cates();
-
     }
 
     public static void cates() throws Exception {
@@ -39,14 +38,11 @@ public class HerbCatesTask {
 
         connection = (Connection) DriverManager.getConnection(url, user, password);
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select url from herb_url_temp");
-
-        //dingxiangDoctorCates("二陈丸", setParams());
-
+        ResultSet resultSet = statement.executeQuery("select DISTINCT cate_url from herb_cates_urls");
         //得到结果
         while (resultSet.next()) {
             //使用resultSet.next()判断是否有下一个值，如果有就返回true
-            String genericUrl = resultSet.getString("url");
+            String genericUrl = resultSet.getString("cate_url");
             //System.out.println(genericUrl);
             dingxiangDoctorCates(genericUrl, setParams());
         }
@@ -56,37 +52,7 @@ public class HerbCatesTask {
         statement.close();
     }
 
-
     static PreparedStatement pstm = null;
-
-    public static void dingxiangCate(String url) {
-        try {
-
-            pstm = connection.prepareStatement("insert into dingxiangyuan_herb_cate(generic_key,text)value(?,?)");
-            Document doc = Jsoup.connect("http://drugs.dxy.cn/search/drug.htm?keyword=" + url).get();
-            //http://drugs.dxy.cn/search/drug.htm?keyword=开胸理气丸
-            doc.baseUri();
-            String text = doc.select("#container > div.common_bd.clearfix > div.common_mainwrap.fl > div > div").text();
-            //String text = doc.select("#container > div.common_bd.clearfix").text();
-
-            System.out.println(text);
-            if (!StringUtils.isEmpty(text)) {
-                pstm.setString(1, url);
-                pstm.setString(2, text);
-
-                boolean row = pstm.execute();
-                if (row) {
-                    System.out.println("添加成功！");
-                }
-            }
-
-            Thread.sleep(2000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public static Document document = null;
 
     /**
@@ -101,7 +67,7 @@ public class HerbCatesTask {
             // 设置请求方式
             //webRequest.setHttpMethod(HttpMethod.GET);
             // 发送页面请求
-            HtmlPage page = webClient.getPage("http://drugs.dxy.cn/search/drug.htm?keyword=" + url);
+            HtmlPage page = webClient.getPage("http:" + url);
             System.out.println("网页加载中....");
 
             document = Jsoup.parse(page.asXml());

@@ -4,13 +4,10 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.mysql.jdbc.Connection;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,9 +16,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/**
+ * 128.220.253.210:80
+ */
 public class HerbCatesHttpTask {
     static Connection connection = null;
 
@@ -38,13 +36,14 @@ public class HerbCatesHttpTask {
 
         connection = (Connection) DriverManager.getConnection(url, user, password);
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select DISTINCT cate_url from herb_cates_urls");
+        ResultSet resultSet = statement.executeQuery("select generic_key,cate_url from herb_cates_urls_temp");
         //得到结果
         while (resultSet.next()) {
             //使用resultSet.next()判断是否有下一个值，如果有就返回true
+            String genericKey = resultSet.getString("generic_key");
             String genericUrl = resultSet.getString("cate_url");
             //System.out.println(genericUrl);
-            dingxiangDoctorCates(genericUrl, setParams());
+            dingxiangDoctorCates(genericKey, genericUrl, setParams());
         }
         //释放资源
         connection.close();
@@ -59,13 +58,17 @@ public class HerbCatesHttpTask {
      * http://drugs.dxy.cn/search/drug.htm?keyword=%E9%98%BF%E8%8E%AB%E8%A5%BF%E6%9E%97
      * 中药材分类
      */
-    public static void dingxiangDoctorCates(String url, WebClient webClient) {
+    public static void dingxiangDoctorCates(String genericKey, String url, WebClient webClient) {
         try {
             pstm = connection.prepareStatement("insert into dingxiangyuan_herb_cate(generic_key,text)value(?,?)");
-            // 准备链接
-            //WebRequest webRequest = new WebRequest(new URL(url));
-            // 设置请求方式
-            //webRequest.setHttpMethod(HttpMethod.GET);
+
+            herbCateTask(genericKey,url);
+
+
+            /*System.setProperty("http.proxyHost", "128.220.253.210");
+            System.setProperty("http.proxyPort", "80");
+
+
             // 发送页面请求
             HtmlPage page = webClient.getPage("http:" + url);
             System.out.println("网页加载中....");
@@ -74,7 +77,7 @@ public class HerbCatesHttpTask {
 
             String text = document.select("#container > div.common_bd.clearfix > div.common_mainwrap.fl > div > div").text();
             if (!StringUtils.isEmpty(text)) {
-                pstm.setString(1, url);
+                pstm.setString(1, genericKey);
                 pstm.setString(2, text);
 
                 boolean row = pstm.execute();
@@ -114,9 +117,10 @@ public class HerbCatesHttpTask {
             }
 
             // 线程沉睡
-            Thread.sleep(1000);
+            Thread.sleep(1000);*/
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
     }
@@ -137,6 +141,10 @@ public class HerbCatesHttpTask {
         webClient.getOptions().setCssEnabled(false);
 
         //设置代理
+       /* ProxyConfig proxyConfig = webClient.getOptions().getProxyConfig();
+        proxyConfig.setProxyHost("128.220.253.210");
+        proxyConfig.setProxyPort(80);*/
+
 
         //忽略ssl认证
         webClient.getOptions().setUseInsecureSSL(true);
@@ -191,5 +199,30 @@ public class HerbCatesHttpTask {
         }
     }
 
+
+    public static void herbCateTask(String genericKey, String url) throws Exception {
+        /*System.setProperty("http.proxyHost", "128.220.253.210");
+        System.setProperty("http.proxyPort", "80");*/
+        //218.193.191.192 ：8888
+        System.setProperty("http.proxyHost", "218.193.191.192");
+        System.setProperty("http.proxyPort", "8888");
+        Document document = Jsoup.connect("http:" +url).timeout(10000).get();
+        String text = document.select("#container > div.common_bd.clearfix > div.common_mainwrap.fl > div > div").text();
+        if (!StringUtils.isEmpty(text)) {
+            pstm.setString(1, genericKey);
+            pstm.setString(2, text);
+
+            boolean row = pstm.execute();
+            if (row) {
+                System.out.println(genericKey+":添加成功");
+            }
+        }else {
+            System.out.println(genericKey+":没成功");
+            System.out.println("失败原因:"+document);
+        }
+
+        // 线程沉睡
+        Thread.sleep(1000);
+    }
 
 }

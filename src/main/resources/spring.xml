@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
        xmlns:c="http://www.springframework.org/schema/c"
        xmlns:p="http://www.springframework.org/schema/p">
 
@@ -18,9 +19,29 @@
 
     </bean>-->
 
+    <!--<bean id="messageService" class="spring_version2.impl.MessageServiceImpl"></bean>-->
 
-    <bean id="beanDemo" class="spring.db.BeanDemo" c:_0="">
+    <bean id="transactionManger" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"/>
 
-    </bean>
+    <!--增强方法-->
+    <tx:advice id="my_advice" transaction-manager="transactionManger">
+        <tx:attributes>
+            <tx:method name="get*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="list*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>
+        </tx:attributes>
+
+
+    </tx:advice>
+    <!--引入目标类，使用通配符-->
+    <aop:config>
+        <aop:advisor advice-ref="my_advice" pointcut="execution(* spring_version2.impl.MessageServiceImpl.*(..))" />
+    </aop:config>
+
+
+
 
 </beans>

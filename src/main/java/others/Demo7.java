@@ -10,7 +10,7 @@ public class Demo7 {
 
 
     public static void rotate(int[] nums, int k) {
-        int tmp = 0;
+        int tmp;
         int length = nums.length;
         //[1,2,3,4,5,6,7]
         for (int j = 0; j < k % length; j++) {

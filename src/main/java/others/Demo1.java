@@ -7,8 +7,7 @@ package others;
 public class Demo1 {
     public static void main(String[] args) {
         String[] arr = {"h", "e", "l", "l", "o", "ass"};
-        String tmp = "";
-        int len = arr.length;
+        String tmp;
         for (int i = 0; i < arr.length; i++) {
             if (i == arr.length - i - 1) {
                 break;
